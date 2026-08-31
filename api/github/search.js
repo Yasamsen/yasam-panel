@@ -1,0 +1,2 @@
+const {verifySession}=require('../../lib/auth');const{octokit,owner,assertConfig}=require('../../lib/github');
+module.exports=async(req,res)=>{if(!(await verifySession(req)))return res.status(401).json({error:'Unauthorized'});try{assertConfig();const q=req.query.q;if(!q)return res.status(400).json({error:'q required'});const r=await octokit.search.code({q:`${q} user:${owner}`,per_page:50});res.json(r.data.items);}catch(e){res.status(e.status||500).json({error:e.message});}};
